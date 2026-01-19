@@ -2,6 +2,8 @@
 #include "utils.h"
 #include "hal_wavelet.h"
 #include "naive_wavelet.h"
+#include "libbmark.h"
+#include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -123,7 +125,9 @@ bool idwt_float_check(unsigned int index) {
 	return success;
 }
 
-void wavelet_test(unsigned int test_size) {
+void wavelet_check(unsigned int test_size) {
+	start_roi();
+
 	dwti_data_size = idwti_data_size = dwtf_data_size = idwtf_data_size = test_size;
 	
 	printf("\n\n%d-COUNT WAVELET TESTS\n", test_size);
@@ -132,4 +136,9 @@ void wavelet_test(unsigned int test_size) {
 	run-test-simple("Float DWT", dwt_float_setup, dwt_float_test, dwt_float_check);
 	run-test-simple("Float iDWT", idwt_float_setup, idwt_float_test, idwt_float_check);
 	printf("\n");
+
+	end_roi();
+	
+	char* payload = "Finished Wavelet tests!";
+	xmit_payload_packet(payload, strlen(payload));
 }
