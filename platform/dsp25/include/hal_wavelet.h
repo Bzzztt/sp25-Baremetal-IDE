@@ -8,6 +8,7 @@ extern "C" {
 #include  "hal_mmio.h"
 //#include "chip_config.h"
 #include <stdint.h>
+#include "stdbool.h"
 
 #define WAVELET_BASE 0x08810000U
 #define WAVELET_EVEN_INPUT  (WAVELET_BASE + 0x00)
@@ -32,7 +33,7 @@ enum wavelet_flags {
 	WAVELET_FLUSH = 1,
 	WAVELET_FLOAT = 1<<2,
 	WAVELET_FORWARD = 1<<3
-}
+};
 
 /* typedef struct {
    __IO uint64_t EVEN_INPUT;
