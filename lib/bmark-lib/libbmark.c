@@ -31,12 +31,7 @@ test_info init_test(UART_Type *UARTx) {
   
 
   if (first_iteration) {
-    CLOCK_SELECTOR->UNCORE = 0;
-    CLOCK_SELECTOR->TILE0 = 0;
-    CLOCK_SELECTOR->TILE1 = 0;
-    CLOCK_SELECTOR->TILE2 = 0;
-    CLOCK_SELECTOR->TILE3 = 0;
-    CLOCK_SELECTOR->CLKTAP = 0; //Ensure we are using the non PLL clock
+  	set_all_clocks(CLOCK_SELECTOR, 0);
 
     UART_InitType UART_init_config;
     UART_init_config.baudrate = 115200;
@@ -84,12 +79,7 @@ test_info init_test(UART_Type *UARTx) {
   int clkmult = chip_freq / 50000000;
   int uart_divisor = (chip_freq / 115200) - 1;
 
-  CLOCK_SELECTOR->UNCORE = 0;
-  CLOCK_SELECTOR->TILE0 = 0;
-  CLOCK_SELECTOR->TILE1 = 0;
-  CLOCK_SELECTOR->TILE2 = 0;
-  CLOCK_SELECTOR->TILE3 = 0;
-  CLOCK_SELECTOR->CLKTAP = 0;
+  set_all_clocks(CLOCK_SELECTOR, 0);
   PLL->PLLEN = 0;
   PLL->MDIV_RATIO = 1;
   PLL->RATIO = clkmult;
@@ -100,12 +90,7 @@ test_info init_test(UART_Type *UARTx) {
   PLL->PLLEN = 1;
   PLL->POWERGOOD_VNN = 1;
   PLL->PLLFWEN_B = 1;
-  CLOCK_SELECTOR->UNCORE = 1;
-  CLOCK_SELECTOR->TILE0 = 1;
-  CLOCK_SELECTOR->TILE1 = 1;
-  CLOCK_SELECTOR->TILE2 = 1;
-  CLOCK_SELECTOR->TILE3 = 1;
-  CLOCK_SELECTOR->CLKTAP = 1;
+  set_all_clocks(CLOCK_SELECTOR, 1);
 
   debug_uart->DIV = uart_divisor;
 
