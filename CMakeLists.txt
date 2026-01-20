@@ -134,7 +134,7 @@ add_subdirectory(driver)
 add_subdirectory(glossy)
 add_subdirectory(lib)
 add_subdirectory(examples)
-
+add_subdirectory(dsp24-bmarks)
 
 #################################
 # Build Target Directories
