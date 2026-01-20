@@ -46,22 +46,27 @@ extern "C" {
 #define PWM_BASE                    0x10060000U
 #define GPIOA_BASE                  0x10010000U
 #define GPIOB_BASE                  0x10011000U
+#define GPIOC_BASE                  0x10012000U
 
 #define UART0_BASE                  0x10020000U
+#define UART1_BASE                  0x10021000U
 #define I2S_BASE                    0x10042000U
 #define PLL_BASE                    0x00140000U
 #define WAVELET_BASE                0x08810000U
 #define DMA_BASE                    0x08812000U
 
 #define RCC_CLOCK_SELECTOR          ((ClockSel_Type*)(RCC_BASE + 0x30000))
+#define CLOCK_SELECTOR              RCC_CLOCK_SELECTOR
 #define CLINT                       ((CLINT_Type *)CLINT_BASE)
 #define PLIC                        ((PLIC_Type *)PLIC_BASE)
 #define PLIC_CC                     ((PLIC_ContextControl_Type *)(PLIC_BASE + 0x00200000U))
 #define PLL                         ((PLL_Type *)PLL_BASE)
 #define UART0                       ((UART_Type *)UART0_BASE)
+#define UART1                       ((UART_Type *)UART1_BASE)
 #define PWM0_BASE                   (PWM_BASE)
 #define GPIOA                       ((GPIO_Type *)GPIOA_BASE)
 #define GPIOB                       ((GPIO_Type *)GPIOB_BASE)
+#define GPIOC                       ((GPIO_Type *)GPIOC_BASE)
 
 // #define CONV_BASE                   0x08800000U
 // #define CONV1D                  ((ConvAccel_Type *)CONV_BASE)
