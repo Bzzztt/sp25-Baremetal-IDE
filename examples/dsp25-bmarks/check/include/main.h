@@ -38,6 +38,7 @@ extern "C" {
 #include "utils.h"
 #include "chip_config.h"
 #include "libbmark.h"
+#include "wavelet_check.h"
 
 
 /**

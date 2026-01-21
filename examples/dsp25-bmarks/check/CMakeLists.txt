@@ -1,4 +1,5 @@
 add_executable(dsp25-check
+  src/wavelet_check.c
   src/main.c
 )
 
@@ -9,3 +10,4 @@ target_link_libraries(dsp25-check PRIVATE
 )
 
 target_link_libraries(dsp25-check PRIVATE libbmark)
+target_link_libraries(dsp25-check PRIVATE dsp25-bmarks)

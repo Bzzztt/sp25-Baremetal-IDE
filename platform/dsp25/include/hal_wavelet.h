@@ -8,6 +8,7 @@ extern "C" {
 #include  "hal_mmio.h"
 //#include "chip_config.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 #define WAVELET_BASE 0x08810000U
 #define WAVELET_EVEN_INPUT  (WAVELET_BASE + 0x00)

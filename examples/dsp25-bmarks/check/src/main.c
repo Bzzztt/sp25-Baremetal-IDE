@@ -20,7 +20,7 @@ void app_init() {}
 void app_main() {
 	uint64_t mhartid = READ_CSR("mhartid");
 
-	printf("Hello world from hart %d\n", mhartid);
+	printf("Hello world from hart %lu\n", mhartid);
 }
 
 // Basic example test from DSP24
@@ -42,7 +42,7 @@ void idle_test() {
   * @brief  The application entry point.
   * @retval int
   */
-int main(int argc, char **argv) {
+int main() {
   result res;
   
   start_roi();
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 		break;
 	  // Wavelet Check
 	  case 1:
-        res = wavelet_check(16);
+        	res = wavelet_check(16);
 		break;
 	  // 1D Conv Check
       default:

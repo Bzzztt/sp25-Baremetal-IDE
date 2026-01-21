@@ -1,24 +1,17 @@
 #include "wavelet_check.h"
-#include "utils.h"
-#include "hal_wavelet.h"
-#include "naive_wavelet.h"
-#include "libbmark.h"
-#include <string.h>
-#include <stdint.h>
-#include <stdbool.h>
 
 uint32_t* dwti_data;
 unsigned int dwti_data_size;
 uint32_t* dwti_real_out;
 unsigned int dwti_out_size;
-void dwt_int_setup() {
+void dwt_int_setup(unsigned int index) {
 	dwti_data = malloc(sizeof(uint32_t) * dwti_data_size);
-	gen_u32(dwt_int_data, dwti_data_size);
+	gen_u32(dwti_data, dwti_data_size);
 	dwti_out_size = num_outputs(dwti_data_size, false);
 	dwti_real_out = malloc(dwti_out_size * sizeof(uint32_t));
 }
 bool dwt_int_test(unsigned int index) {
-	dwt_int(dwt_int_data, dwti_real_out, dwti_data_size, WAVELET_DB_4);
+	dwt_int(dwti_data, dwti_real_out, dwti_data_size, WAVELET_DB_4);
 	return true;
 }
 bool dwt_int_check(unsigned int index) {
@@ -38,7 +31,7 @@ uint32_t* idwti_data;
 unsigned int idwti_data_size;
 uint32_t* idwti_real_out;
 unsigned int idwti_out_size;
-void idwt_int_setup() {
+void idwt_int_setup(unsigned int index) {
 	idwti_data = malloc(sizeof(uint32_t) * idwti_data_size);
 	gen_u32(idwti_data, idwti_data_size);
 	idwti_out_size = num_outputs(idwti_data_size, false);
@@ -72,7 +65,7 @@ void dwt_float_setup(unsigned int index) {
 	dwtf_real_out = malloc(dwtf_out_size * sizeof(float));
 }
 bool dwt_float_test(unsigned int index) {
-	dwt_float(dwtf_real_data, dwtf_real_out, dwtf_data_size, WAVELET_DB_4);
+	dwt_float(dwtf_data, dwtf_real_out, dwtf_data_size, WAVELET_DB_4);
 	return true;
 }
 bool dwt_float_check(unsigned int index) {
@@ -85,7 +78,7 @@ bool dwt_float_check(unsigned int index) {
 			printf("WRONG RESULT for element %d- GOT: %f, SHOULD BE: %f\n", i, dwtf_real_out[i], dwtf_data[i]);
 			success = false;
 		}
-		printf("GOT: %d\n", dwtf_real_out[i]);
+		printf("GOT: %f\n", dwtf_real_out[i]);
 	}
 
 	free(dwtf_real_out);
@@ -97,14 +90,14 @@ float* idwtf_data;
 unsigned int idwtf_data_size;
 float* idwtf_real_out;
 unsigned int idwtf_out_size;
-void idwt_float_setup() {
+void idwt_float_setup(unsigned int index) {
 	idwti_data = malloc(sizeof(uint32_t) * idwtf_data_size);
 	gen_f32(idwtf_data, idwtf_data_size);
 	idwtf_out_size = num_outputs(idwtf_data_size, false);
 	idwtf_real_out = malloc(idwtf_out_size * sizeof(float));
 }
 bool idwt_float_test(unsigned int index) {
-	idwt_float(idwtf_real_data, idwtf_real_out, idwtf_data_size, WAVELET_DB_4);
+	idwt_float(idwtf_data, idwtf_real_out, idwtf_data_size, WAVELET_DB_4);
 	return true;
 }
 bool idwt_float_check(unsigned int index) {
@@ -117,7 +110,7 @@ bool idwt_float_check(unsigned int index) {
 			printf("WRONG RESULT for element %d- GOT: %f, SHOULD BE: %f\n", i, idwtf_real_out[i], idwtf_data[i]);
 			success = false;
 		}
-		printf("GOT: %d\n", idwtf_real_out[i]);
+		printf("GOT: %f\n", idwtf_real_out[i]);
 	}
 
 	free(idwtf_real_out);
@@ -125,20 +118,24 @@ bool idwt_float_check(unsigned int index) {
 	return success;
 }
 
-void wavelet_check(unsigned int test_size) {
+result wavelet_check(unsigned int test_size) {
 	start_roi();
 
 	dwti_data_size = idwti_data_size = dwtf_data_size = idwtf_data_size = test_size;
 	
+	result res;
+
 	printf("\n\n%d-COUNT WAVELET TESTS\n", test_size);
-	run-test-simple("Int DWT", dwt_int_setup, dwt_int_test, dwt_int_check);
-	run-test-simple("Int iDWT", idwt_int_setup, idwt_int_test, idwt_int_check);
-	run-test-simple("Float DWT", dwt_float_setup, dwt_float_test, dwt_float_check);
-	run-test-simple("Float iDWT", idwt_float_setup, idwt_float_test, idwt_float_check);
+	res = run_test_simple("Int DWT", dwt_int_setup, dwt_int_test, dwt_int_check);
+	res = run_test_simple("Int iDWT", idwt_int_setup, idwt_int_test, idwt_int_check);
+	res = run_test_simple("Float DWT", dwt_float_setup, dwt_float_test, dwt_float_check);
+	res = run_test_simple("Float iDWT", idwt_float_setup, idwt_float_test, idwt_float_check);
 	printf("\n");
 
 	end_roi();
 	
 	char* payload = "Finished Wavelet tests!";
 	xmit_payload_packet(payload, strlen(payload));
+	
+	return res;
 }

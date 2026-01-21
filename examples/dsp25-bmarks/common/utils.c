@@ -1,5 +1,5 @@
 #include "utils.h"
-#include <stdbool>
+#include <stdbool.h>
 #include "chip_config.h"
 
 static unsigned int read_cycles() {
@@ -12,20 +12,20 @@ static unsigned int read_cycles() {
 bool check_bytes(size_t size, size_t number, void* result, void* ref) {
 	bool success = true;
 	for (unsigned int i = 0; i < size*number; i++) {
-		if (result[i] != ref[i]) {
+		if (((char*)result)[i] != ((char*)ref)[i]) {
 			success = false;
-			printf("Byte %d is incorrect: got %c instead of %c\n", i, result[i], ref[i]);
+			printf("Byte %d is incorrect: got %c instead of %c\n", i, ((char*)result)[i], ((char*)ref)[i]);
 		}
-		success = success && (result[i] == ref[i]);
+		success = success && (((char*)result)[i] == ((char*)ref)[i]);
 	}
 	return success;
 }
 
 /* Time a function */
-unsigned int time(void (*func) (void)) {
+unsigned int time_func(void (*func) (void)) {
 	unsigned int time = read_cycles();
 	func();
-	return read_cycles-time;
+	return read_cycles()-time;
 }
 
 /* Run a test */
@@ -59,28 +59,26 @@ result run_test_simple(char* name, void (*setup) (unsigned int), bool (*test) (u
 
 /* Run a test several times, passing in the test ID each time */
 result run_test_advanced(char* name, void (*setup) (unsigned int),  bool (*test) (unsigned int), bool (*check) (unsigned int), unsigned int num_tests) {
-	if (setup != NULL)
-		setup();	
-	
 	printf("Testing test %s...\n", name);
 	printf("Test %s %d\n", name, num_tests);
 	unsigned int total_cycles = 0;
 	unsigned int start_time;
-	success = true;
+	bool success = true;
 	for (unsigned int i = 0; i < num_tests; i++) {
-		setup(i);
+		if (setup == NULL)
+			setup(i);
 		start_time = read_cycles();
 		if (!test(i)) {
 			success = false;
 			printf("Test did not complete correctly.\n");
 		}
-		total_cycles += read_cycles()-start_time();
+		total_cycles += read_cycles()-start_time;
 		printf("Checking results...\n");
 		if (check(i))
-			printf("Test %s %d succeeded!\n");
+			printf("Test %s %d succeeded!\n", name, i);
 		else {
 			success = false;
-			printf("Test %s %d failed!\n");
+			printf("Test %s %d failed!\n", name, i);
 		}
 		printf("\n");
 	}
